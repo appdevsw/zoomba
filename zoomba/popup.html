@@ -1,0 +1,146 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Zoomba</title>
+<script
+	src="common.js"
+	type="text/javascript"></script>
+<script
+	src="settings.js"
+	type="text/javascript"></script>
+<script
+	src="keyboard.js"
+	type="text/javascript"></script>
+<script
+	src="popup.js"
+	type="text/javascript"></script>
+
+<!-- ----------------- STYLES ------------------------ -->
+<style type="text/css">
+body {
+	white-space: nowrap;
+	font-size: 100%;
+}
+
+.title {
+	font-size: 120%;
+	text-align: center;
+	background-color: transparent;
+	padding: 1em;
+	font-weight: normal;
+}
+
+.hotkey {
+	border: 1px solid transparent;
+	font-size: 90%;
+	height: 100%;
+	min-width: 14em;
+}
+
+select {
+	width: 100%;
+	border: 1px solid transparent;
+	font-size: 100%;
+	background-color: transparent;
+}
+
+select:focus {
+	border: 1px solid blue;
+}
+
+input:focus {
+	border: 1px solid blue;
+}
+
+input[type="text"]:disabled {
+	background-color: transparent;
+}
+
+button {
+	font-size: 80%;
+}
+
+button:focus {
+	border: 2px solid blue;
+}
+
+.thead {
+	background-color: #EEEEEE;
+	padding-top: 6px;
+	padding-bottom: 6px;
+	padding-right: 6px;
+	padding-left: 6px;
+	font-size: 100%;
+	font-weight: normal;
+	border: solid 1px gray;
+}
+
+td {
+	padding: 0px;
+	border-collapse: collapse;
+	border: solid 1px gray;
+}
+
+tr {
+	padding: 0px;
+	border-collapse: collapse;
+}
+
+table {
+	border-spacing: 0;
+	border-collapse: collapse;
+}
+
+::selection {
+	background-color: transparent;
+}
+</style>
+</head>
+<!-- --------------------------------------------- -->
+
+<body>
+	<form>
+		<div align="left">
+			<TABLE>
+				<TR>
+					<TH colspan="3">
+						<div class="title">
+							<img
+								src="loupe.png"
+								height="24"
+								width="24"></img> <label>Zoomba settings</label>
+						</div>
+					</TH>
+				</TR>
+				<TR>
+					<TH class="thead"><label>Zoom-in hotkey</label></TH>
+					<TH class="thead"><label>Zoom-out hotkey</label></TH>
+					<TH class="thead"><label>Increment %</label></TH>
+				</TR>
+				<!--rows and values will be inserted by popup.js-->
+				<TR id="trid0">
+					<TD id="tdid0"><input
+						name="hotkey"
+						type="text"
+						class="hotkey"
+						spellcheck="false"
+						title='Use the keyboard to enter the key sequence.&#10;You can also turn the mouse wheel inside input field to enter the wheel event.&#10;Press Backspace to clear the entered data.'>
+					</TD>
+					<TD>dummy</TD>
+					<TD align="center"><select name="increment">
+					</select></TD>
+				</TR>
+			</TABLE>
+			<br>
+			<button
+				id="defaultsettings"
+				type="button"
+				tabindex="-1">Restore defaults</button>
+		</div>
+	</form>
+	<div
+		id="tooltip"
+		style="display: none"></div>
+</body>
+</html>
