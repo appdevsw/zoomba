@@ -3,6 +3,7 @@ var Settings = function()
 	this.KEY_CTRL = 17;
 	this.version = 1;
 	this.increments = [ "", 1, 2, 2.5, 5, 10, 12.5, 15, 20, 25, 30, 33.33, 40, 50 ];
+	this.rowCount = 8;
 
 	this.defaultSettings = function()
 	{

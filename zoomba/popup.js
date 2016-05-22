@@ -5,11 +5,10 @@ var tabKeys = [ "Tab", "Shift Tab" ];
 var specialKeys = [ "Tab", "Shift Tab", "Backspace" ];
 var backspaceKey = "Backspace";
 
-
 //populate listboxes in popup.html
 function modifyDOM()
 {
-	//fill select fields with allowable increments
+	//fill SELECT options with allowable increments
 	var objs = document.getElementsByName("increment");
 	for ( var i in objs)
 	{
@@ -33,7 +32,7 @@ function modifyDOM()
 	par.replaceChild(keyobj2, par.children[1]);
 
 	var baseobj = document.getElementById("trid0");
-	var rows = 6;
+	var rows = settobj.rowCount;
 	for (var i = 1; i < rows; i++)
 	{
 		var clone = baseobj.cloneNode(true);
@@ -113,7 +112,6 @@ function tooltip(e, txt)
 
 function listenerOnKey(e)
 {
-	//log("listenerOnKey " + e.type);
 	//log("listenerOnKey " + e.type + " > " + e.target.className);
 	keyboard.onEvent(e);
 
@@ -124,7 +122,9 @@ function listenerOnKey(e)
 		return;
 	tooltip(e.target, keyseqall);
 
-	keyseq = keyboard.getKeyboardStateString({ keyOnly : true });
+	keyseq = keyboard.getKeyboardStateString({
+		keyOnly : true
+	});
 	if (tabKeys.indexOf(keyseq) >= 0)
 		return;
 	if (e.type == "keydown" && keyseq == "")

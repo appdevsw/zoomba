@@ -1,7 +1,7 @@
 function log(m)
 {
-	if (true)
-	//if (false)
+	var debug = false; //true;
+	if (debug)
 	{
 		if (typeof contentid != "undefined")
 			console.log(contentid + ">" + m);
