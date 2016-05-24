@@ -45,7 +45,7 @@ function isSupportedTab(tab)
 		if (tab.url.indexOf(forbidden[f]) >= 0)
 			return false;
 	}
-	prot = tab.url.split(new RegExp(":."))[0];
+	var prot = tab.url.split(new RegExp(":."))[0];
 	if ([ "chrome", "opera", "view-source" ].indexOf(prot) >= 0)
 		return false;
 	return true;

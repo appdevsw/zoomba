@@ -188,13 +188,13 @@ var Keyboard = function()
 
 	this.getKeyCodesFromString = function(s)
 	{
-		names = s.split(" ");
-		ids = [];
+		var names = s.split(" ");
+		var ids = [];
 		for (i in names)
 		{
 
 			name = names[i];
-			if (names[i] == "")
+			if (name == "")
 				break;
 			kcode = this.revkeymap[name];
 			if (!kcode)

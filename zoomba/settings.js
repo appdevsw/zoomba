@@ -1,13 +1,12 @@
 var Settings = function()
 {
-	this.KEY_CTRL = 17;
 	this.version = 1;
 	this.increments = [ "", 1, 2, 2.5, 5, 10, 12.5, 15, 20, 25, 30, 33.33, 40, 50 ];
 	this.rowCount = 8;
 
 	this.defaultSettings = function()
 	{
-		settings = {};
+		var settings = {};
 
 		settings[0] = {
 			keyin : "Ctrl Mouse-Wheel-In",
@@ -60,7 +59,7 @@ var Settings = function()
 
 	this.DOMToSettings = function()
 	{
-		settings = {};
+		var settings = {};
 		var tab = this.getObjTabFromDOM();
 		for ( var i in tab)
 		{

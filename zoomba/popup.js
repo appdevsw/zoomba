@@ -116,13 +116,13 @@ function listenerOnKey(e)
 	keyboard.onEvent(e);
 
 	tooltip(e.target, "");
-	keyseqall = keyboard.getKeyboardStateString();
+	var keyseqall = keyboard.getKeyboardStateString();
 
 	if (!e.target.className || e.target.className != "hotkey")
 		return;
 	tooltip(e.target, keyseqall);
 
-	keyseq = keyboard.getKeyboardStateString({
+	var keyseq = keyboard.getKeyboardStateString({
 		keyOnly : true
 	});
 	if (tabKeys.indexOf(keyseq) >= 0)
