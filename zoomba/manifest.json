@@ -2,8 +2,9 @@
  "manifest_version": 2,
 
  "name": "Zoomba",
+ "short_name": "Zoomba",
  "description": "Customizable zoom increment.", 
- "version": "1.0.2",
+ "version": "1.0.6",
  "author": "appdevsw@wp.pl",
 
   "browser_action": {
@@ -23,7 +24,7 @@
     }
   ], 
     
-  "icons": { "128": "loupe.png" },
+  "icons": { "128": "loupe128.png" },
   "content_security_policy": "script-src 'self'; object-src 'self';",
 	          
   "permissions": [	   					

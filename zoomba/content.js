@@ -64,7 +64,7 @@ function checkIsConnected()
 function setListeners(enable)
 {
 	//log("set listeners " + enable);
-	evlist = [ "focus", "mousewheel", "keydown", "keyup" ];
+	var evlist = [ "focus", "mousewheel", "keydown", "keyup" ];
 	evlist.forEach(function(e)
 	{
 
