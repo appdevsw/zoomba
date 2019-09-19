@@ -19,3 +19,15 @@ this.Messages = function()
 }
 
 var Message = new Messages();
+
+this.Identifiers = function()
+{
+	this.WHEEL_INCR = "whincr";
+	this.WHEEL_INCR2 = this.WHEEL_INCR + "2";
+	this.WHEEL_INCR3 = this.WHEEL_INCR + "3";
+	this.WHEEL_REV_DIR = "whrevdir";
+	this.DRAG_ZOOM = "dragzoom";
+	this.DRAG_ZOOM_REV_DIR = "dragzoomdir";
+}
+
+var IDS = new Identifiers();

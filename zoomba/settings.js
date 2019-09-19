@@ -1,6 +1,6 @@
 var Settings = function()
 {
-	this.version = 1;
+	this.version = 2;
 	this.increments = [ "", 1, 2, 2.5, 5, 10, 12.5, 15, 20, 25, 30, 33.33, 40, 50 ];
 	this.rowCount = 8;
 
@@ -29,6 +29,9 @@ var Settings = function()
 			incr : 5
 		};
 
+		settings.wheel = {};
+		settings[IDS.DRAG_ZOOM] = false;
+		settings[IDS.DRAG_ZOOM_REV_DIR] = false;
 		//log("defaultSettings " + JSON.stringify(settings));
 		return settings;
 	};
@@ -73,6 +76,27 @@ var Settings = function()
 			};
 			settings[o.idx] = tabpos;
 		}
+
+		settings.wheel = {};
+		for (var i = 1; i <= 3; i++)
+		{
+			var id = IDS.WHEEL_INCR + i;
+			var obj = document.getElementById(id);
+			if (obj)
+				settings.wheel[id] = obj.children[0].value;
+			var id = IDS.WHEEL_REV_DIR + i;
+			var obj = document.getElementById(id);
+			if (obj)
+				settings.wheel[id] = obj.checked;
+		}
+
+		var obj = document.getElementById(IDS.DRAG_ZOOM);
+		if (obj)
+		{
+			settings[IDS.DRAG_ZOOM] = obj.checked;
+			settings[IDS.DRAG_ZOOM_REV_DIR] = document.getElementById(IDS.DRAG_ZOOM_REV_DIR).checked;
+		}
+
 		//log("DOMToSettings " + JSON.stringify(settings));
 
 		return settings;
@@ -96,6 +120,29 @@ var Settings = function()
 			o.keyin.value = settings[i].keyin;
 			o.keyout.value = settings[i].keyout;
 			o.incrobj.value = settings[i].incr;
+		}
+
+		if (settings.wheel)
+		{
+			for (var i = 1; i <= 3; i++)
+			{
+				var id = IDS.WHEEL_INCR + i;
+				var obj = document.getElementById(id);
+				if (obj)
+					obj.children[0].value = settings.wheel[id];
+				var id = IDS.WHEEL_REV_DIR + i;
+				var obj = document.getElementById(id);
+				if (obj)
+					obj.checked = settings.wheel[id];
+			}
+
+		}
+
+		var obj = document.getElementById(IDS.DRAG_ZOOM);
+		if (obj)
+		{
+			obj.checked = (settings[IDS.DRAG_ZOOM] == true);
+			document.getElementById(IDS.DRAG_ZOOM_REV_DIR).checked = (settings[IDS.DRAG_ZOOM_REV_DIR] == true);
 		}
 	};
 

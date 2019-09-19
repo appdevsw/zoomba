@@ -8,6 +8,7 @@ if (contentid) //skip duplicate content instances
 	var keyboard = new Keyboard();
 	var settings = {};
 	var disconnected;
+	var dragCount = 0;
 
 	log("new content script id " + contentid);
 
@@ -64,7 +65,7 @@ function checkIsConnected()
 function setListeners(enable)
 {
 	//log("set listeners " + enable);
-	var evlist = [ "focus", "mousewheel", "keydown", "keyup" ];
+	var evlist = [ "focus", "mousewheel", "keydown", "keyup", "mousemove", "contextmenu" ];
 	evlist.forEach(function(e)
 	{
 
@@ -74,7 +75,8 @@ function setListeners(enable)
 		if (enable)
 		{
 			obj.removeEventListener(e, listener);
-			obj.addEventListener(e, listener);
+			//obj.addEventListener(e, listener);
+			obj.addEventListener(e, listener,{passive: false}); //v 1.2.1 - fix event.preventDefault() error 
 		} else
 			obj.removeEventListener(e, listener);
 	});
@@ -116,6 +118,12 @@ function listener(event)
 	case "keydown":
 		listenerKeyDown(event);
 		break;
+	case "mousemove":
+		listenerMouseMove(event);
+		break;
+	case "contextmenu":
+		listenerContextMenu(event);
+		break;
 	default:
 		throw ("switch/case error");
 	}
@@ -123,7 +131,6 @@ function listener(event)
 
 function listenerFocus(event)
 {
-	//log("focus");
 	keyboard.reset();
 }
 
@@ -146,6 +153,29 @@ function findPressedObj(kbdStateStr)
 
 function listenerWheel(event)
 {
+
+	if (event.buttons > 0 && settings.wheel) //mouse-only zoom
+	{
+		var incr, dir;
+
+		for (var i = 1; i <= 3; i++)
+		{
+			if (event.buttons == i && settings.wheel[IDS.WHEEL_INCR + i])
+			{
+				incr = settings.wheel[IDS.WHEEL_INCR + i];
+				dir = settings.wheel[IDS.WHEEL_REV_DIR + i] ? -1 : 1;
+				dir = dir * event.wheelDelta;
+			}
+		}
+		if (incr)
+		{
+			event.preventDefault();
+			event.stopPropagation();
+			sendZoomMessage(dir, incr);
+		}
+		return;
+	}
+
 	//join the keyboard state with a wheel pseudo key
 	var kbdStateStr = keyboard.getKeyboardStateString({
 		wheelDelta : event.wheelDelta
@@ -184,9 +214,42 @@ function listenerKeyUp(event)
 	keyboard.onEvent(event);
 }
 
+function listenerMouseMove(event)
+{
+	if (event.buttons == 3 && settings[IDS.DRAG_ZOOM] == true)
+	{
+		if (dragCount++ > 2)
+		{
+			event.preventDefault();
+			event.stopPropagation();
+			var dir = event.movementY > 0 ? -1 : 1;
+			if (settings[IDS.DRAG_ZOOM_REV_DIR] == true)
+				dir = -dir;
+			var incr = Math.abs(event.movementY);
+			if (incr <= 3)
+				incr = 1;
+			sendZoomMessage(dir, incr);
+		}
+	}
+	if (event.buttons != 3)
+		dragCount = 0;
+}
+
+function listenerContextMenu(event)
+{
+	//block the context menu when both mouse buttons are pressed
+	if (event.buttons == 3 && settings.wheel)
+		if (settings[IDS.DRAG_ZOOM] == true || settings.wheel[IDS.WHEEL_INCR2] || settings.wheel[IDS.WHEEL_INCR3])
+
+		{
+			event.preventDefault();
+			event.stopPropagation();
+		}
+}
+
 function listenerOnMessage(msg, sender, callback)
 {
-	//log("received message " + JSON.stringify(msg));
+	//console.log("received message " + JSON.stringify(msg));
 	log("received message " + msg.msg);
 	if (msg.msg == Message.SETTINGS)
 	{

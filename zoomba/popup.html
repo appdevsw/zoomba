@@ -27,7 +27,7 @@ body {
 	font-size: 120%;
 	text-align: center;
 	background-color: transparent;
-	padding: 1em;
+	padding: 0.5em;
 	font-weight: normal;
 }
 
@@ -36,6 +36,11 @@ body {
 	font-size: 99%;
 	height: 100%;
 	min-width: 16em;
+}
+
+.checkbox {
+	display: table;
+	width: 100%;
 }
 
 select {
@@ -132,6 +137,63 @@ table {
 					</select></TD>
 				</TR>
 			</TABLE>
+			<br>Mouse-only zoom - wheel increments<br> <small>Press
+				and hold the mouse button and turn the wheel to change the zoom
+				level.</small><br>
+			<TABLE id="wh">
+				<TR>
+					<TH class="thead"><label>Mouse button</label></TH>
+					<TH class="thead"><label>Increment %</label></TH>
+					<TH class="thead"><label>Reverse direction</label></TH>
+				</TR>
+				<TR>
+					<TD>Left</TD>
+					<TD
+						id="whincr1"
+						align="center"><select name="increment">
+					</select></TD>
+					<TD><input
+						id="whrevdir1"
+						class="checkbox"
+						type="checkbox"></TD>
+				</TR>
+				<TR>
+					<TD>Right</TD>
+					<TD
+						id="whincr2"
+						align="center"><select name="increment">
+					</select></TD>
+					<TD><input
+						id="whrevdir2"
+						class="checkbox"
+						type="checkbox"></TD>
+				</TR>
+				<TR>
+					<TD>Left+Right</TD>
+					<TD
+						id="whincr3"
+						align="center"><select name="increment">
+					</select></TD>
+					<TD><input
+						id="whrevdir3"
+						class="checkbox"
+						type="checkbox"></TD>
+				</TR>
+			</TABLE>
+			<br> <input
+				id="dragzoom"
+				type="checkbox"> Enable mouse drag zoom <input
+				id="dragzoomdir"
+				type="checkbox"> reverse direction <br> <small>
+				Press both mouse buttons and move the cursor up or down to change
+				the zoom level. </small> <br>
+			<div style="LINE-HEIGHT: 0.8em">
+				<i><small><small><br>Be aware that a right
+							click opens the context menu by default. It cannot be changed,
+							but you can <br>hide the menu by clicking the right button
+							twice, or by holding the left button first, then pressing the
+							right one. </small></small></i>
+			</div>
 			<br>
 			<button
 				id="defaultsettings"

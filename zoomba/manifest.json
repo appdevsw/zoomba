@@ -4,7 +4,7 @@
  "name": "Zoomba",
  "short_name": "Zoomba",
  "description": "Customizable zoom increment.", 
- "version": "1.0.7",
+ "version": "1.2.1",
  "author": "appdevsw@wp.pl",
 
   "browser_action": {
@@ -30,7 +30,7 @@
   "permissions": [	   					
   					"storage", 
    					"tabs", 
-   					"management",   					
+   					"management",
     				"https://*/*", 
 		  			"http://*/*" 
   ]
