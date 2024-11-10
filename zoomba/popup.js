@@ -4,6 +4,7 @@ var buttonReset;
 var tabKeys = [ "Tab", "Shift Tab" ];
 var specialKeys = [ "Tab", "Shift Tab", "Backspace" ];
 var backspaceKey = "Backspace";
+var storageID = "settings";
 
 //populate listboxes in popup.html
 function modifyDOM()
@@ -42,18 +43,71 @@ function modifyDOM()
 
 }
 
+function saveParameters(settings,closeWindow=false)
+{
+	//log("Save parameters " + JSON.stringify(settings));
+	settings.version = settobj.version;
+	var data =
+	{};
+	data[storageID] = settings;
+	chrome.storage.local.set(data, function()
+	{
+		console.log("Settings saved " + JSON.stringify(settings));
+		sendSettingsToContent(settings);
+		if(closeWindow)
+			window.close();
+	});
+	
+
+}
+
+function loadParameters(callback)
+{
+
+	chrome.storage.local.get(storageID, function(result)
+	{
+		var settings =
+		{};
+
+		var valid = false;
+		try
+		{
+			valid = result.settings.version == settobj.version;
+		} catch (err)
+		{
+		}
+
+		if (!valid)
+		{
+			settings = settobj.defaultSettings();
+		} else
+		{
+			settings = result.settings;
+		}
+
+		settobj.settingsToDOM(settings);
+
+	});
+}
+
 document.addEventListener('DOMContentLoaded', function()
 {
+
 	modifyDOM();
 
 	buttonReset = document.getElementById("defaultsettings");
+	buttonSave = document.getElementById("btn_save");
 
-	var bg = chrome.extension.getBackgroundPage();
-	addEventListener("unload", function(event)
+	loadParameters(function(settings)
 	{
-		settings = settobj.DOMToSettings();
-		bg.saveParameters(settings);
-	}, true);
+		console.error("popup Settings loaded" + JSON.stringify(settings));
+		if (!settings)
+		{
+			settings = defaultSettings();
+			saveParameters(settings);
+		}
+		settobj.settingsToDOM(settings)
+	});
 
 	var tab = settobj.getObjTabFromDOM();
 	var evlist = [ 'keydown', 'keyup', 'mousewheel' ];
@@ -71,25 +125,19 @@ document.addEventListener('DOMContentLoaded', function()
 				buttonReset.addEventListener(evlist[ei], listenerOnKey);
 		}
 	}
+
 	buttonReset.addEventListener("click", function()
 	{
 		buttonReset.blur();
 		settobj.settingsToDOM(settobj.defaultSettings());
 	});
 
-	chrome.runtime.getBackgroundPage(function(bg)
+	buttonSave.addEventListener("click", function()
 	{
-		bg.loadParameters(function(settings)
-		{
-			//log("popup Settings loaded" + JSON.stringify(settings));
-			if (!settings)
-			{
-				settings = defaultSettings();
-				bg.saveParameters(settings);
-			}
-			settobj.settingsToDOM(settings)
-		});
+		settings = settobj.DOMToSettings();
+		saveParameters(settings,true);
 	});
+
 
 });
 
@@ -112,7 +160,7 @@ function tooltip(e, txt)
 
 function listenerOnKey(e)
 {
-	//log("listenerOnKey " + e.type + " > " + e.target.className);
+	//log("listenerOnKey " + e.type + " > " + e.target.className+" "+JSON.stringify(e));
 	keyboard.onEvent(e);
 
 	tooltip(e.target, "");
@@ -122,7 +170,8 @@ function listenerOnKey(e)
 		return;
 	tooltip(e.target, keyseqall);
 
-	var keyseq = keyboard.getKeyboardStateString({
+	var keyseq = keyboard.getKeyboardStateString(
+	{
 		keyOnly : true
 	});
 	if (tabKeys.indexOf(keyseq) >= 0)
@@ -141,3 +190,4 @@ function listenerOnKey(e)
 	e.stopPropagation();
 
 }
+

@@ -97,14 +97,15 @@ var Settings = function()
 			settings[IDS.DRAG_ZOOM_REV_DIR] = document.getElementById(IDS.DRAG_ZOOM_REV_DIR).checked;
 		}
 
-		//log("DOMToSettings " + JSON.stringify(settings));
+		console.log("DOMToSettings " + JSON.stringify(settings));
 
 		return settings;
 	};
 
 	this.settingsToDOM = function(settings)
 	{
-		//log("settingsToDOM " + JSON.stringify(settings));
+		log("settingsToDOM " + JSON.stringify(settings));
+		
 		var tab = this.getObjTabFromDOM();
 		for ( var i in tab)
 		{
