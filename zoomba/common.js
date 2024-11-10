@@ -31,3 +31,46 @@ this.Identifiers = function()
 }
 
 var IDS = new Identifiers();
+
+
+function isSupportedTab(tab)
+{
+	var forbidden = [ "//chrome.google.com", "//addons.opera.com" ];
+	for ( var f in forbidden)
+	{
+		if (tab.url.indexOf(forbidden[f]) >= 0)
+			return false;
+	}
+	var prot = tab.url.split(new RegExp(":."))[0];
+	if ([ "chrome", "opera", "view-source" ].indexOf(prot) >= 0)
+		return false;
+	return true;
+}
+
+
+
+function sendMessageToContent(message)
+{
+	chrome.tabs.query(
+	{
+		active : true
+	}, function(tabs)
+	{
+		for ( var i in tabs)
+		{
+			if (!isSupportedTab(tabs[i]))
+				continue;			
+			chrome.tabs.sendMessage(tabs[i].id, message);
+		}
+	});
+}
+
+function sendSettingsToContent(settings)
+{
+	var message =
+	{
+		msg : Message.SETTINGS,
+		settings : settings
+	};
+	sendMessageToContent(message);
+}

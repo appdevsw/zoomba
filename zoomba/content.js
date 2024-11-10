@@ -1,16 +1,16 @@
-//
 if (contentid) //skip duplicate content instances
 {
-	log("Prevoiusly injected content is active. Re-injection is not required.");
+	console.log("Prevoiusly injected content is active. Re-injection is not required.");
 } else
 {
+	
+
 	var contentid = Math.round(Math.random() * 1e12);
 	var keyboard = new Keyboard();
-	var settings = {};
+	var settings =
+	{};
 	var disconnected;
 	var dragCount = 0;
-
-	log("new content script id " + contentid);
 
 	MAIN();
 }
@@ -23,22 +23,43 @@ function MAIN()
 	setListeners(false);
 	setListeners(true);
 	checkIsConnected();
-	sendContentMessage({
+	sendMessageToBackground(
+	{
 		msg : Message.REQUEST_SETTINGS
 	});
+
 }
+
+function listenerOnMessage(msg, sender, callback)
+{
+
+	if (msg.msg == Message.SETTINGS)
+	{
+		settings = msg.settings;
+	}
+
+	
+	if (callback)
+	{
+		callback(
+		{
+			status : 'ok'
+		});
+	}
+
+	return true;
+};
 
 function sendZoomMessage(direction, incr)
 {
-	zoomMsg = {
+	zoomMsg =
+	{
 		msg : Message.ZOOM,
 		direction : direction,
 		incr : incr
 	};
 	log("send  message " + JSON.stringify(zoomMsg));
-	sendContentMessage(zoomMsg, function(response)
-	{
-	});
+	sendMessageToBackground(zoomMsg);
 }
 
 //disable current content instance after the background.js goes inactive
@@ -48,7 +69,8 @@ function checkIsConnected()
 		return false;
 	try
 	{
-		sendContentMessage({
+		sendMessageToBackground(
+		{
 			msg : Message.PING
 		});
 		return true;
@@ -64,7 +86,6 @@ function checkIsConnected()
 
 function setListeners(enable)
 {
-	//log("set listeners " + enable);
 	var evlist = [ "focus", "mousewheel", "keydown", "keyup", "mousemove", "contextmenu" ];
 	evlist.forEach(function(e)
 	{
@@ -75,8 +96,10 @@ function setListeners(enable)
 		if (enable)
 		{
 			obj.removeEventListener(e, listener);
-			//obj.addEventListener(e, listener);
-			obj.addEventListener(e, listener,{passive: false}); //v 1.2.1 - fix event.preventDefault() error 
+			obj.addEventListener(e, listener,
+			{
+				passive : false
+			}); //v 1.2.1 - fix event.preventDefault() error 
 		} else
 			obj.removeEventListener(e, listener);
 	});
@@ -84,9 +107,13 @@ function setListeners(enable)
 	try
 	{
 		if (enable)
-			chrome.extension.onMessage.addListener(listenerOnMessage);
+			{
+			chrome.runtime.onMessage.addListener(listenerOnMessage);
+			}
 		else
-			chrome.extension.onMessage.removeListener(listenerOnMessage);
+			{
+			chrome.runtime.onMessage.removeListener(listenerOnMessage);
+			}
 	} catch (err)
 	{
 		//log("remove onMessage listener error " + err);
@@ -96,13 +123,8 @@ function setListeners(enable)
 
 function listener(event)
 {
-
-	if (!checkIsConnected())
+	switch (event.type)
 	{
-		return;
-	}
-
-	switch (event.type) {
 	case "focus":
 		listenerFocus(event);
 		break;
@@ -177,7 +199,8 @@ function listenerWheel(event)
 	}
 
 	//join the keyboard state with a wheel pseudo key
-	var kbdStateStr = keyboard.getKeyboardStateString({
+	var kbdStateStr = keyboard.getKeyboardStateString(
+	{
 		wheelDelta : event.wheelDelta
 	});
 
@@ -247,18 +270,10 @@ function listenerContextMenu(event)
 		}
 }
 
-function listenerOnMessage(msg, sender, callback)
-{
-	//console.log("received message " + JSON.stringify(msg));
-	log("received message " + msg.msg);
-	if (msg.msg == Message.SETTINGS)
-	{
-		settings = msg.settings;
-	}
-};
 
-function sendContentMessage(msg, callback)
+function sendMessageToBackground(msg)
 {
 	msg.contentid = contentid;
-	chrome.runtime.sendMessage(msg, callback);
+	//console.log("szw sendMessageToBackground: "+JSON.stringify(msg));	
+	chrome.runtime.sendMessage(msg);
 }
