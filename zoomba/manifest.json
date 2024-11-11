@@ -26,9 +26,7 @@
   "permissions": [
     "storage",
     "tabs",
-    "management",
-    "scripting",
-    "activeTab"
+    "management"
   ],
   "short_name": "Zoomba",
   "update_url": "https://clients2.google.com/service/update2/crx",
